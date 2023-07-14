@@ -16,12 +16,24 @@ const userSchema = mongoose.Schema({
     password : {
         type : String,
         required : true
+    },
+    isVerified : {
+        type : Boolean,
+        required : true,
+        default : false
     }
 });
 
+userSchema.methods.comparePassword = async function(password){
+    const result = await bcrypt.compare(password,this.password);
+    return result;
+}
+
+
+
 userSchema.pre('save', async function(next){
     //console.log(this);
-    if(this.isModified('password') == false) {
+    if(this.isModified('password') == true) {
        this.password = await bcrypt.hash(this.password, 10);
     }
 
