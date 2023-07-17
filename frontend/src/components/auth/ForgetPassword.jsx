@@ -4,12 +4,14 @@ import Title from '../form/Title'
 import FormInput from '../form/FormInput'
 import Submit from '../form/Submit'
 import CustomLink from '../CustomLink'
+import FormContainer from '../form/FormContainer'
+import { containerStyle } from '../../utils/theme'
 
 function ForgetPassword() {
   return (
-    <div className='fixed inset-0 bg-primary -z-10 flex justify-center items-center'>
+    <FormContainer>
         <Container>
-            <form className='bg-secondary rounded p-6 w-96 space-y-6'>
+            <form className={containerStyle + ' w-96'}>
                 <Title>Please Enter Your Email</Title>
                 <FormInput name='email' label="Email" placeholder='john@gmail.com'/>
                 <Submit value='Submit'/>
@@ -22,7 +24,7 @@ function ForgetPassword() {
 
             </form>
         </Container>
-    </div>
+    </FormContainer>
   )
 }
 

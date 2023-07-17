@@ -4,12 +4,14 @@ import Title from '../form/Title'
 import FormInput from '../form/FormInput'
 import Submit from '../form/Submit'
 import CustomLink from '../CustomLink'
+import { containerStyle } from '../../utils/theme'
+import FormContainer from '../form/FormContainer'
 
-function Signin() {
+function Signin() {  
   return (
-    <div className='fixed inset-0 bg-primary -z-10 flex justify-center items-center'>
+    <FormContainer>
         <Container>
-            <form className='bg-secondary rounded p-6 w-72 space-y-6'>
+            <form className = {containerStyle + ' w-72'}>
                 <Title>Sign In</Title>
                 <FormInput name='email' label="Email" placeholder='john@gmail.com'/>
                 <FormInput name='password' label="Password" placeholder='********'/>
@@ -23,7 +25,7 @@ function Signin() {
 
             </form>
         </Container>
-    </div>
+    </FormContainer>
   )
 }
 

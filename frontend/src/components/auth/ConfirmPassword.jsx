@@ -4,12 +4,14 @@ import Title from '../form/Title'
 import Submit from '../form/Submit'
 import CustomLink from '../CustomLink'
 import FormInput from '../form/FormInput'
+import FormContainer from '../form/FormContainer'
+import { containerStyle } from '../../utils/theme'
 
 function ConfirmPassword() {
   return (
-    <div className='fixed inset-0 bg-primary -z-10 flex justify-center items-center'>
+    <FormContainer>
         <Container>
-            <form className='bg-secondary rounded p-6 w-96 space-y-6'>
+            <form className= {containerStyle + ' w-96'}>
                 <Title>Confirm Password</Title>
                 <FormInput name='password' label="Password" placeholder='*******' type="password"/>
                 <FormInput name='confirmPassword' label="Confirm Password" placeholder='*******' type="password"/>
@@ -23,7 +25,7 @@ function ConfirmPassword() {
 
             </form>
         </Container>
-    </div>
+    </FormContainer>
   )
 }
 
