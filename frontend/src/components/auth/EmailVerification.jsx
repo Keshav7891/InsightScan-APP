@@ -4,9 +4,26 @@ import Title from '../form/Title'
 import Submit from '../form/Submit'
 import FormContainer from '../form/FormContainer';
 import { containerStyle } from '../../utils/theme';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { verifyUserEmail } from '../../api/auth';
+
 
 const OTP_LENGTH = 6;
 let currentOtpIndex;
+
+const isValidOTP = (otp) => {
+    let valid = false;
+    for(let val of otp){
+        valid = !isNaN(parseInt(val));
+        if(!valid) break;
+    }
+    if(valid === true){
+        return {ok : true}
+    }
+    else{
+        return {ok : false , error : "Invalid OTP"};
+    }
+}
 
 
 
@@ -15,6 +32,12 @@ function EmailVerification() {
     const [activeOtpIndex, setActiveOtpIndex] = useState(0);
 
     const inputRef = useRef();
+
+
+    const {state} = useLocation();
+    const user = state?.user;
+    const navigate = useNavigate();
+
 
     const focusNextInputField = (index) => {
         setActiveOtpIndex(index + 1);
@@ -49,10 +72,33 @@ function EmailVerification() {
         }
     }
 
+    useEffect( () => {
+        if(!user){
+            navigate('/not-found')
+        }
+    },[user])
+
+    const handleSubmit = async(event) => {
+        event.preventDefault();
+        const {ok,error} = isValidOTP(otp);
+        if(!ok){
+            return console.log(error);
+        }
+
+        const response = await verifyUserEmail({OTP:otp.join('') , userId : user.id});
+        if(response.error){
+            return console.log(response.error);
+        }
+
+
+        console.log(response.message);
+    }
+
+
   return (
     <FormContainer>
         <Container>
-            <form className={containerStyle + ' w-96'}>
+            <form onSubmit={handleSubmit} className={containerStyle + ' w-96'}>
                 <div>
                     <Title>Please Enter OTP To Verify Account</Title>
                     <p className='text-center dark:text-dark-subtle text-light-subtle'>OTP has been sent to your email</p>

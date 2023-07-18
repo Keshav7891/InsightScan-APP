@@ -6,34 +6,27 @@ import Submit from '../form/Submit'
 import CustomLink from '../CustomLink'
 import { containerStyle } from '../../utils/theme'
 import FormContainer from '../form/FormContainer'
+import { createUser } from '../../api/auth'
+import { useNavigate } from 'react-router-dom'
 
 
-const validateUserInfo = ({name,email,password}) => {
-
+const validateUserInfo = ({ name, email, password }) => {
+  const isValidEmail = /^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/;
   const isValidName = /^[a-z A-Z]+$/;
-  const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-  if(name.trim()===''){
-    return {ok:false , error : 'Name is Missing'};
-  }
-  if(isValidName.test(name) === false){
-    return {ok:false , error : 'Name is Invalid'};
-  }
+  if (!name.trim()) return { ok: false, error: "Name is missing!" };
+  if (!isValidName.test(name)) return { ok: false, error: "Invalid name!" };
 
-  if(email.trim() === ""){
-    return {ok:false , error : 'Email is Missing'};
-  }
-  if(isValidEmail.test(email)){
-    return {ok:false , error : 'Email is Invalid'};
-  }
+  if (!email.trim()) return { ok: false, error: "Email is missing!" };
+  if (!isValidEmail.test(email)) return { ok: false, error: "Invalid email!" };
 
-  if(password.trim() === ""){
-    return {ok:false , error : 'Password is Missing'};
-  }
-  if(password.length < 8){
-    return {ok:false , error : 'Password Must Be Minimum 8 Characters'};
-  }
-}
+  if (!password.trim()) return { ok: false, error: "Password is missing!" };
+  if (password.length < 8)
+    return { ok: false, error: "Password must be 8 characters long!" };
+
+  return { ok: true };
+};
+
 
 
 function Signup() {
@@ -44,19 +37,30 @@ function Signup() {
     password : ""
   });
 
+  const navigate = useNavigate();
+
   const handleChange = ({target}) => {
     const {value , name} = target;
     console.log(userInfo.name ,userInfo.email , userInfo.password , name);
     setUserInfo({...userInfo , [name] : value});
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
       e.preventDefault();
       const {ok,error} = validateUserInfo(userInfo);
       if(!ok){
         return console.log(error);
       }
-      console.log(userInfo);
+      
+      const response = await createUser(userInfo);
+      if(response.error) return console.log(response.error);
+
+
+      navigate('/auth/verification' , {
+        state : {user : response.user},
+        replace : true,
+      });
+      
     };
 
   const {name,email,password} = userInfo;

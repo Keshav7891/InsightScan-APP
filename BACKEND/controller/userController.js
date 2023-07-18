@@ -39,7 +39,11 @@ exports.createUser = async(req,res) => {
             <h1>${OTP}</h1>
         `
     });
-    return res.status(201).json({message : "Please Verify your email . OTP is sent to your email address !!"});
+    return res.status(201).json({user : {
+        id : newUser._id,
+        name : newUser.name,
+        email : newUser.email,
+    }});
 };
 
 
@@ -81,7 +85,7 @@ exports.verifyEmail = async (req,res) => {
 
     await EmailVerificationToken.findByIdAndDelete(token._id);
 
-    res.json({success :'Your Email is Verified.'});
+    res.json({message :'Your Email is Verified.'});
 
 
     var transport = generateMailTransporter();
